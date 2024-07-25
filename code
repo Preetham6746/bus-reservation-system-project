@@ -1,0 +1,57 @@
+#include <iostream>
+#include <climits>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node *left;
+    Node *right;
+
+    Node(int data) {
+        this->data = data;
+        left = nullptr;  // Initialize left and right children to nullptr
+        right = nullptr;
+    }
+};
+
+void getMaxSum(Node *node, int *max_sum, int curr_sum) {
+    if (node == nullptr) return;
+
+    curr_sum = curr_sum + node->data;
+    if (node->left == nullptr && node->right == nullptr) { // If it's a leaf node
+        if (curr_sum > *max_sum) {
+            *max_sum = curr_sum;
+        }
+    }
+
+    getMaxSum(node->left, max_sum, curr_sum);
+    getMaxSum(node->right, max_sum, curr_sum);
+}
+
+int max_sum(Node *node) {
+    if (node == nullptr) return 0;
+
+    int max_sum = INT_MIN;
+    getMaxSum(node, &max_sum, 0);
+    return max_sum;
+}
+
+int main() {
+    Node *root = new Node(10);
+    root->left = new Node(-2);
+    root->left->left = new Node(8);
+    root->left->right = new Node(4);
+    root->right = new Node(7);
+
+    cout << max_sum(root) << endl;
+
+    // Clean up memory
+    delete root->left->left;
+    delete root->left->right;
+    delete root->left;
+    delete root->right;
+    delete root;
+
+    return 0;
+}
